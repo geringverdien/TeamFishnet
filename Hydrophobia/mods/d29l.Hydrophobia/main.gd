@@ -1,6 +1,5 @@
 extends Node
 
-var players = []
 var in_game = false
 var local_player
 var entities
