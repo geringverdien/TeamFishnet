@@ -6,8 +6,8 @@ var local_player
 var entities
 
 func _ready():
-	get_tree().connect("node_added", self, "_player_ready")
-
+	get_tree().connect("node_added", self, "_on_node_added")
+	
 func cast_ray(from: Vector3, to: Vector3):
 	var space_state = local_player.get_world().get_direct_space_state()
 	var result = space_state.intersect_ray(from, to, [])
@@ -19,10 +19,9 @@ func cast_ray(from: Vector3, to: Vector3):
 		
 	return result.collider.get_parent().name
 
-func _player_ready(node: Node):
+func _on_node_added(node: Node):
 	var map: Node = get_tree().current_scene
 	in_game = map.name == "world"
-	
 	if node.name != "main_map": return
 	if not in_game: return
 	entities = get_tree().current_scene.get_node("Viewport/main/entities")
@@ -41,6 +40,9 @@ func _physics_process(delta):
 		return
 	
 	if local_player.in_air:
+		if local_player.current_zone != "main_zone":
+			return
+			
 		var ray = cast_ray(local_player.global_transform.origin, local_player.global_transform.origin - Vector3(0, 1, 0))
 		if ray:
 			if "water" in ray:
