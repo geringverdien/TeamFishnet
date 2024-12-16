@@ -1,0 +1,13 @@
+{
+  "Id": "eli.FinapseX",
+  "PackPath": "FinapseX.pck",
+  "Dependencies": [
+    "BlueberryWolfi.APIs"
+  ],
+  "Metadata": {
+  "Name": "Finapse X",
+  "Author": "eli",
+  "Version": "v1.0.1",
+  "Description": "Script Executor for Webfishing -TeamFishnet :3"
+  }
+}
