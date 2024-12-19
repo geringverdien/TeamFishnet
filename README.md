@@ -20,6 +20,7 @@
 	 * [x] mod to skip water death animation (Hydrophobia)
 	 * [x] working script executor (Finapse X)
 	 * [ ] utilities for trickshotting
+  	 * [ ] anti fabricmc
 
 
 We hope you enjoy what we make, for feedback or questions feel free to reach out :)
