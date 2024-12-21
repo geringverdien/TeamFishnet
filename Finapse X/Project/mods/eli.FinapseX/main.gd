@@ -117,6 +117,7 @@ func enableInputEvents():
 
 func loadstring(code): 
 	var fullCode = payload + code
+	fullCode = fullCode.strip_edges()
 	var script = GDScript.new()
 	script.set_source_code(fullCode)
 	print(fullCode)

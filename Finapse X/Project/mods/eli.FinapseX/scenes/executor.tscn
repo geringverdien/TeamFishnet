@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://mods/eli.FinapseX/fonts/Roboto-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://mods/eli.FinapseX/scenes/draggable.gd" type="Script" id=2]
+[ext_resource path="res://mods/eli.FinapseX/scenes/Open.gd" type="Script" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -24,6 +26,7 @@ layer = 128
 [node name="Control" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 3 )
 
 [node name="Panel" type="Panel" parent="Control"]
 anchor_right = 1.0
@@ -32,6 +35,7 @@ margin_left = 284.0
 margin_top = 202.0
 margin_right = -456.0
 margin_bottom = -225.0
+script = ExtResource( 2 )
 
 [node name="TextEdit" type="TextEdit" parent="Control/Panel"]
 anchor_top = 0.0479042
@@ -95,12 +99,38 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
+[node name="Open" type="Button" parent="Control/Panel"]
+anchor_left = 0.339831
+anchor_top = 0.952527
+anchor_right = 0.666102
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 4 )
+text = "Open"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
 [node name="Clear" type="Button" parent="Control/Panel"]
 anchor_left = 0.681356
 anchor_top = 0.952527
 anchor_right = 1.0
 anchor_bottom = 1.0
 text = "Clear"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="FileDialog" type="FileDialog" parent="Control"]
+anchor_left = 0.235938
+anchor_top = 0.244444
+anchor_right = 0.807292
+anchor_bottom = 0.952778
+popup_exclusive = true
+window_title = "Open"
+resizable = true
+dialog_text = "Please select a script to open"
+mode = 0
+access = 2
 __meta__ = {
 "_edit_use_anchors_": true
 }
