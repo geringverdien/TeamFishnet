@@ -8,6 +8,7 @@ const NUMBER_COLOR = Color(0.8, 0.5, 0.2)  # Orange
 
 var PlayerAPI
 var KeybindsAPI
+var gds
 var ingame = false
 var isOpen = false
 var localPlayer
@@ -20,6 +21,7 @@ var panel = control.get_node("Panel")
 var textEdit = panel.get_node("TextEdit")
 var execute = panel.get_node("Execute")
 var clear = panel.get_node("Clear")
+var clearCache = panel.get_node("ClearCache")
 
 var payload = """
 extends Node
@@ -41,7 +43,6 @@ func launchPayload(selfPassed):
 	localPlayer = PlayerAPI.local_player
 	
 """
-
 
 func _ready():
 	ui.visible = isOpen
@@ -66,6 +67,7 @@ func _ready():
 	setupSyntaxHighlighting(textEdit)
 	execute.connect("pressed", self, "onClickExecute")
 	clear.connect("pressed", self, "onClickClear")
+	clearCache.connect("pressed", self, "onClickClearCache")
 	
 func onKeybindPressed():
 	if !ingame: return
@@ -114,24 +116,26 @@ func enableInputEvents():
 func loadstring(code): 
 	var fullCode = payload + code
 	fullCode = fullCode.strip_edges()
-	var script = GDScript.new()
-	script.set_source_code(fullCode)
-	print(fullCode)
-	var result = null
-	var success = true
-	var instance = null
+	
+	if gds == null:
+		gds = GDScript.new()
+		gds.reload(true)
+		
+	
+	
+	gds.set_source_code(fullCode)
+	var result
+	var instance
 	
 	var errorMessage = ""
-	var reloadRes = script.reload()
+	var reloadRes = gds.reload(true)
 	if reloadRes == OK:
-		instance = script.new()
+		instance = gds.new()
 		result = instance.launchPayload(self)
 		self.add_child(instance)
 	else:
-		errorMessage = "Failed to reload the script: " + reloadRes
-		success = false
-	
-	if !success:
+		errorMessage = "[color=#ff0000]Parser error (invalid syntax)[/color]"
+		Network._update_chat(errorMessage, true)
 		print(errorMessage)
 
 func onClickExecute():
@@ -141,14 +145,25 @@ func onClickExecute():
 	loadstring(overriddenText)
 	
 func onClickClear():
-	textEdit.text = ""
+	textEdit.text = "func _ready():\n\t"
+	
+func onClickClearCache():
+	for child in get_children():
+		if child is CanvasLayer: continue
+		child.queue_free()
 
 func setupSyntaxHighlighting(text_edit):
 	var keywords = [
-		"extends", "func", "var", "if", "else", "while", "for", "in", "return", "class_name",
-		"const", "enum", "break", "continue", "pass", "match", "yield",
-		"tool", "signal", "export", "static", "true", "false"
+		"if", "elif", "else", "for", "while", "match", 
+		"break", "continue", "pass", "return", "class", "class_name",
+		"extends", "as", "is" , "self", "tool", "signal", 
+		"func", "static", "const", "enum", "var", "onready",
+		"export", "setget", "breakpoint", "preload", "yield", "assert",
+		"remote", "master", "puppet", "remotesync", "mastersync", "puppetsync",
+		"PI", "TAU", "INF", "NAN", 
+		"in", "not", "and", "or"
 	]
+
 	for keyword in keywords:
 		text_edit.add_keyword_color(keyword, KEYWORD_COLOR)
 

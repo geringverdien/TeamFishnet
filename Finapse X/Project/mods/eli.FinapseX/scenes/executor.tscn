@@ -1,28 +1,30 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://mods/eli.FinapseX/fonts/Roboto-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://mods/eli.FinapseX/scenes/draggable.gd" type="Script" id=2]
 [ext_resource path="res://mods/eli.FinapseX/scenes/file buttons.gd" type="Script" id=3]
 [ext_resource path="res://mods/eli.FinapseX/scenes/resize.gd" type="Script" id=4]
+[ext_resource path="res://mods/eli.FinapseX/assets/trash.svg" type="Texture" id=5]
+[ext_resource path="res://mods/eli.FinapseX/assets/Roboto-Regular.ttf" type="DynamicFontData" id=6]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=9]
 size = 18
-extra_spacing_space = 2
-font_data = ExtResource( 1 )
+extra_spacing_char = 1
+extra_spacing_space = 3
+font_data = ExtResource( 6 )
 
-[sub_resource type="DynamicFont" id=2]
-size = 22
-font_data = ExtResource( 1 )
+[sub_resource type="DynamicFont" id=7]
+size = 24
+font_data = ExtResource( 6 )
 
-[sub_resource type="DynamicFont" id=3]
-size = 19
-font_data = ExtResource( 1 )
+[sub_resource type="DynamicFont" id=8]
+size = 20
+font_data = ExtResource( 6 )
 
 [sub_resource type="DynamicFont" id=4]
-font_data = ExtResource( 1 )
+font_data = ExtResource( 6 )
 
 [sub_resource type="DynamicFont" id=5]
-font_data = ExtResource( 1 )
+font_data = ExtResource( 6 )
 
 [sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.447059, 0.447059, 0.447059, 1 )
@@ -39,23 +41,24 @@ anchor_bottom = 1.0
 script = ExtResource( 3 )
 
 [node name="Panel" type="Panel" parent="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 284.0
-margin_top = 202.0
-margin_right = -456.0
-margin_bottom = -225.0
+anchor_left = 0.147917
+anchor_top = 0.187037
+anchor_right = 0.7625
+anchor_bottom = 0.791667
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="TextEdit" type="TextEdit" parent="Control/Panel"]
 anchor_top = 0.0479042
 anchor_right = 1.0
 anchor_bottom = 0.952563
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 9 )
 text = "# Finapse X on top - made by team Fishnet :3
-#Note: scripts extend Node automatically, use \"localPlayer\" to access player, 
-#\"PlayerAPI\" and \"KeybindsAPI\" to access BlueberryWolfi's libraries.
-#Prints get outputted to local chat
+# Note: scripts extend Node automatically, use \"localPlayer\" to access player, 
+# \"PlayerAPI\" and \"KeybindsAPI\" to access BlueberryWolfi's libraries.
+# Prints get outputted to local chat
 
 func _ready():
 	var name = PlayerAPI.get_player_name(localPlayer)
@@ -79,7 +82,7 @@ __meta__ = {
 [node name="Finapse" type="Label" parent="Control/Panel"]
 anchor_right = 1.0
 anchor_bottom = 0.0474732
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 7 )
 text = "Finapse   "
 align = 1
 valign = 1
@@ -90,10 +93,10 @@ __meta__ = {
 
 [node name="X" type="Label" parent="Control/Panel"]
 modulate = Color( 1, 0.4, 0, 1 )
-anchor_left = 0.0635593
-anchor_right = 1.0
+anchor_left = 0.0652542
+anchor_right = 1.00085
 anchor_bottom = 0.0474732
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 8 )
 text = "X"
 align = 1
 clip_text = true
@@ -113,6 +116,19 @@ clip_text = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
+
+[node name="ClearCache" type="Button" parent="Control/Panel"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -36.0
+margin_bottom = 31.0
+hint_tooltip = "Delete all "
+custom_fonts/font = SubResource( 4 )
+shortcut_in_tooltip = false
+icon = ExtResource( 5 )
+flat = true
+clip_text = true
+icon_align = 1
 
 [node name="Open" type="Button" parent="Control/Panel"]
 anchor_left = 0.649153
