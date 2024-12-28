@@ -42,9 +42,6 @@ func launchPayload(selfPassed):
 	
 """
 
-var readyFuncOverride = """func _ready():
-	while _finapseScript == null:
-		yield(get_tree(), "idle_frame")"""
 
 func _ready():
 	ui.visible = isOpen
@@ -99,8 +96,7 @@ func disableInputEvents():
 	storedInputEvents.clear()
 	
 	for action in InputMap.get_actions():
-		if action == "toggle_finapse":
-			continue
+		if action == "toggle_finapse": continue
 		var events = InputMap.get_action_list(action)
 		storedInputEvents[action] = []
 		
@@ -140,8 +136,7 @@ func loadstring(code):
 
 func onClickExecute():
 	var text = textEdit.text
-	var overriddenText = text.replace("func _ready():", readyFuncOverride)
-	overriddenText = overriddenText.replace("print", "customPrnt")
+	var overriddenText = text.replace("print", "customPrnt")
 
 	loadstring(overriddenText)
 	
@@ -152,7 +147,7 @@ func setupSyntaxHighlighting(text_edit):
 	var keywords = [
 		"extends", "func", "var", "if", "else", "while", "for", "in", "return", "class_name",
 		"const", "enum", "break", "continue", "pass", "match", "yield",
-		"tool", "signal", "export", "static"
+		"tool", "signal", "export", "static", "true", "false"
 	]
 	for keyword in keywords:
 		text_edit.add_keyword_color(keyword, KEYWORD_COLOR)

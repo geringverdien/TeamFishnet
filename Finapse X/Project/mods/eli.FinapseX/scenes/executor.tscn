@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://mods/eli.FinapseX/fonts/Roboto-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://mods/eli.FinapseX/scenes/draggable.gd" type="Script" id=2]
-[ext_resource path="res://mods/eli.FinapseX/scenes/Open.gd" type="Script" id=3]
+[ext_resource path="res://mods/eli.FinapseX/scenes/file buttons.gd" type="Script" id=3]
+[ext_resource path="res://mods/eli.FinapseX/scenes/resize.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -19,6 +20,15 @@ font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=4]
 font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=5]
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.447059, 0.447059, 0.447059, 1 )
+corner_radius_top_left = 1000
+corner_detail = 1
+anti_aliasing = false
 
 [node name="CanvasLayer" type="CanvasLayer"]
 layer = 128
@@ -73,6 +83,7 @@ custom_fonts/font = SubResource( 2 )
 text = "Finapse   "
 align = 1
 valign = 1
+clip_text = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -85,51 +96,100 @@ anchor_bottom = 0.0474732
 custom_fonts/font = SubResource( 3 )
 text = "X"
 align = 1
+clip_text = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
 [node name="Execute" type="Button" parent="Control/Panel"]
-anchor_top = 0.952527
-anchor_right = 0.326271
-anchor_bottom = 1.0
+anchor_left = 0.000847458
+anchor_top = 0.950996
+anchor_right = 0.327118
+anchor_bottom = 0.998469
 custom_fonts/font = SubResource( 4 )
+shortcut_in_tooltip = false
 text = "Execute"
+clip_text = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
 [node name="Open" type="Button" parent="Control/Panel"]
-anchor_left = 0.339831
-anchor_top = 0.952527
-anchor_right = 0.666102
-anchor_bottom = 1.0
+anchor_left = 0.649153
+anchor_top = 0.950996
+anchor_right = 0.811865
+anchor_bottom = 0.998469
 custom_fonts/font = SubResource( 4 )
 text = "Open"
+clip_text = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Save" type="Button" parent="Control/Panel"]
+anchor_left = 0.81356
+anchor_top = 0.950996
+anchor_right = 0.976269
+anchor_bottom = 0.998469
+custom_fonts/font = SubResource( 4 )
+text = "Save"
+clip_text = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
 [node name="Clear" type="Button" parent="Control/Panel"]
-anchor_left = 0.681356
-anchor_top = 0.952527
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_left = 0.328814
+anchor_top = 0.950996
+anchor_right = 0.647458
+anchor_bottom = 0.998469
+custom_fonts/font = SubResource( 5 )
 text = "Clear"
+clip_text = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="FileDialog" type="FileDialog" parent="Control"]
+[node name="Resize" type="Panel" parent="Control/Panel"]
+anchor_left = 0.980508
+anchor_top = 0.964778
+anchor_right = 0.999153
+anchor_bottom = 0.996937
+margin_right = 1.0
+margin_bottom = 2.0
+custom_styles/panel = SubResource( 6 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Control" type="Control" parent="Control/Panel"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="OpenDialog" type="FileDialog" parent="Control"]
 anchor_left = 0.235938
 anchor_top = 0.244444
 anchor_right = 0.807292
 anchor_bottom = 0.952778
 popup_exclusive = true
-window_title = "Open"
+window_title = "Open a File"
 resizable = true
 dialog_text = "Please select a script to open"
 mode = 0
+access = 2
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="SaveDialog" type="FileDialog" parent="Control"]
+anchor_left = 0.235938
+anchor_top = 0.244444
+anchor_right = 0.807292
+anchor_bottom = 0.952778
+popup_exclusive = true
+resizable = true
+dialog_text = "Please select a script to save to"
 access = 2
 __meta__ = {
 "_edit_use_anchors_": true
