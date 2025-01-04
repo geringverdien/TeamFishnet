@@ -1,0 +1,11 @@
+{
+    "name": "FinapseX",
+    "version_number": "1.2.7",
+    "website_url": "https://github.com/d29l/TeamFishnet",
+    "description": "Script Executor for Webfishing -TeamFishnet :3",
+    "dependencies": [
+      "NotNet-GDWeave-2.0.14",
+      "BlueberryWolfi-BlueberryWolfiAPIs-1.0.2"
+    ]
+  }
+  
