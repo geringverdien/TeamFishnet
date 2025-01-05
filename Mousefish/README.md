@@ -2,6 +2,8 @@
 
 Allows you to set your in-game cursor to any image url.
 
+![image](https://raw.githubusercontent.com/d29l/TeamFishnet/refs/heads/main/Mousefish/screenshot.png)
+
 **NOTE**: 256×256 is the max resolution
 
 ## How to use
