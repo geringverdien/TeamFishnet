@@ -1,0 +1,11 @@
+{
+    "name": "Mousefish",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/d29l/TeamFishnet",
+    "description": "Use custom cursors -TeamFishnet :3",
+    "dependencies": [
+      "NotNet-GDWeave-2.0.14",
+      "PuppyGirl-TackleBox-0.5.2"
+    ]
+  }
+  

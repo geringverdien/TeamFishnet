@@ -1,0 +1,14 @@
+{
+  "Id": "eli.Mousefish",
+  "PackPath": "Mousefish.pck",
+  "Dependencies": [
+    "TackleBox"
+  ],
+  "Metadata": {
+  "Name": "Mousefish",
+  "Author": "eli",
+  "Version": "1.0.0",
+  "Description": "Use custom cursors -TeamFishnet :3",
+  "Homepage": "https://github.com/d29l/TeamFishnet"
+  }
+}
