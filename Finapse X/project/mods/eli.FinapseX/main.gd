@@ -6,6 +6,7 @@ const STRING_COLOR = Color(0.2, 0.8, 0.2)  # Green
 const COMMENT_COLOR = Color(0.6, 0.6, 0.6)  # Gray
 const NUMBER_COLOR = Color(0.8, 0.5, 0.2)  # Orange
 
+onready var TackleBox := $"/root/TackleBox"
 var PlayerAPI
 var KeybindsAPI
 var gds
@@ -22,6 +23,12 @@ var textEdit = panel.get_node("TextEdit")
 var execute = panel.get_node("Execute")
 var clear = panel.get_node("Clear")
 var clearCache = panel.get_node("ClearCache")
+var server
+var clients = {}
+
+var config = {
+	"websocket_enabled": false
+}
 
 var payload = """
 extends Node
@@ -33,7 +40,9 @@ var localPlayer
 func customPrnt(message):
 	Network._update_chat("[color=#4a4a4a]" + str(message) + "[/color]", true)
 	print(message)
-	
+
+func wait(s=0.01):
+	yield(get_tree().create_timer(s), "timeout")
 
 func launchPayload(selfPassed):
 	_finapseScript = selfPassed
@@ -44,13 +53,13 @@ func launchPayload(selfPassed):
 	
 """
 
+
 func _ready():
 	ui.visible = isOpen
 	while not get_node_or_null("/root/BlueberryWolfiAPIs/KeybindsAPI"): # wait for libraries
 		yield(get_tree(), "idle_frame") 
 	PlayerAPI = get_node_or_null("/root/BlueberryWolfiAPIs/PlayerAPI")
 	KeybindsAPI = get_node_or_null("/root/BlueberryWolfiAPIs/KeybindsAPI")
-	
 	
 	
 	var toggleOpenKeybind = KeybindsAPI.register_keybind({
@@ -69,6 +78,74 @@ func _ready():
 	clear.connect("pressed", self, "onClickClear")
 	clearCache.connect("pressed", self, "onClickClearCache")
 	
+	initConfig()
+	var useSocket = config.websocket_enabled
+	if useSocket: initWebsocket()
+
+func _process(d):
+	if not server: return
+	if server.is_listening():
+		server.poll()
+
+
+func initConfig() -> void:
+	var savedConfig = TackleBox.get_mod_config("eli.FinapseX")
+	for key in config.keys():
+		if not savedConfig.has(key):
+			savedConfig[key] = config[key]
+	
+	config = savedConfig.duplicate()
+	TackleBox.set_mod_config("eli.FinapseX", config)
+
+
+func initWebsocket():
+	print("ws init")
+	server = WebSocketServer.new()
+	server.connect("connection_closed", self, "clientDisconnected")
+	server.connect("connection_error", self, "clientDisconnected")
+	server.connect("connection_established", self, "clientConnected")
+	server.connect("data_received", self, "onData")
+	
+	var err = server.listen(24892)
+	if err != OK:
+		print("Unable to start server")
+		set_process(false)
+		return
+	print("WebSocket Server started on port 24892")
+	set_process(true)
+
+func sendMessage(message):
+	if server.get_connection_status() == WebSocketClient.CONNECTION_CONNECTED:
+		server.get_peer(1).put_packet(message.to_utf8())
+	else:
+		print("Not connected to server")
+
+func clientConnected(id, protocol):
+		print("Client %d connected with protocol: %s" % [id, protocol])
+		clients[id] = true
+		server.get_peer(id).put_packet("Connection confirmed".to_utf8())
+
+func clientDisconnected(id, was_clean = false):
+		print("Client %d disconnected, clean: %s" % [id, str(was_clean)])
+		clients.erase(id)
+
+func onData(id = 1):
+	#print("Received data from client: ", id)
+	var packet = server.get_peer(id).get_packet()
+	var dataString = packet.get_string_from_utf8()
+	var overriddenData = dataString.replace("print(", "customPrnt(")
+	
+	match dataString:
+		"IS_READY":
+			server.get_peer(id).put_packet("TRUE".to_utf8())
+		"ATTACH":
+			server.get_peer(id).put_packet("READY".to_utf8())
+		_:
+			print("Executing remote script")
+			loadstring(overriddenData)
+			server.get_peer(id).put_packet("OK".to_utf8())
+
+
 func onKeybindPressed():
 	if !ingame: return
 	
@@ -78,21 +155,6 @@ func onKeybindPressed():
 	else:
 		enableInputEvents()
 	ui.visible = isOpen
-
-func onIngame():
-	ingame = true
-	initExecutor()
-
-func playerAdded(plr):
-	if plr.name == "player":
-		localPlayer = plr
-
-func playerRemoved(plr):
-	if plr.name == "player":
-		ingame = false
-
-func initExecutor():
-	add_child(ui)
 
 func disableInputEvents():
 	storedInputEvents.clear()
@@ -110,8 +172,26 @@ func enableInputEvents():
 	for action in storedInputEvents.keys():
 		for event in storedInputEvents[action]:
 			InputMap.action_add_event(action, event)
-
+	
 	storedInputEvents.clear()
+
+
+func onIngame():
+	ingame = true
+	initExecutor()
+
+func playerAdded(plr):
+	if plr.name == "player":
+		localPlayer = plr
+
+func playerRemoved(plr):
+	if plr.name == "player":
+		ingame = false
+
+func initExecutor():
+	add_child(ui)
+
+
 
 func loadstring(code): 
 	var fullCode = payload + code
@@ -120,8 +200,6 @@ func loadstring(code):
 	if gds == null:
 		gds = GDScript.new()
 		gds.reload(true)
-		
-	
 	
 	gds.set_source_code(fullCode)
 	var result
@@ -138,6 +216,7 @@ func loadstring(code):
 		Network._update_chat(errorMessage, true)
 		print(errorMessage)
 
+
 func onClickExecute():
 	var text = textEdit.text
 	var overriddenText = text.replace("print(", "customPrnt(")
@@ -151,6 +230,7 @@ func onClickClearCache():
 	for child in get_children():
 		if child is CanvasLayer: continue
 		child.queue_free()
+
 
 func setupSyntaxHighlighting(text_edit):
 	var keywords = [

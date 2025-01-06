@@ -56,7 +56,7 @@ anchor_right = 1.0
 anchor_bottom = 0.952563
 custom_fonts/font = SubResource( 9 )
 text = "# Finapse X on top - made by team Fishnet :3
-# Note: scripts extend Node automatically, use \"localPlayer\" to access player, 
+# Note: scripts extend Node automatically, use \"localPlayer\" to access player, wait function to wait seconds
 # \"PlayerAPI\" and \"KeybindsAPI\" to access BlueberryWolfi's libraries.
 # Prints get outputted to local chat
 
