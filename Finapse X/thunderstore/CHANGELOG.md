@@ -1,6 +1,6 @@
 ## 1.3.0
 
-* Visual Studio Code support!!! Enable the websocket in the config, copy the [extension folder](https://github.com/d29l/TeamFishnet/blob/main/Finapse%20X/vsc%20extension.zip) into your vsc extensions folder, relaunch your game and start executing code with a button in the bottom left :3
+* Visual Studio Code support!!! Enable the websocket in the config, install the real `synapse-execute` extension off the marketplace, overwrite the [extension folder](https://github.com/d29l/TeamFishnet/blob/main/Finapse%20X/vsc%20extension.zip) in your vsc extensions folder, relaunch your game and start executing code with a button in the bottom left :3
 * added a `wait(seconds)` function
 
 ## 1.2.6

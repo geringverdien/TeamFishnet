@@ -10,7 +10,7 @@ Lets you run scripts in-game without using the editor or recompiling mods for de
 
 ### Features
 
-* Visual Studio Code integration via [extension](https://github.com/d29l/TeamFishnet/blob/main/Finapse%20X/vsc%20extension.zip)
+* Visual Studio Code integration via [extension](https://github.com/d29l/TeamFishnet/blob/main/Finapse%20X/vsc%20extension.zip) (check changelog for details)
 * customizable keybind to open and close (Default F1)
 * totally original name and ui (rip Synapse)
 * syntax highlighting and codemap (I wish CodeEdit was a 3.5 node)
