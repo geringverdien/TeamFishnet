@@ -1,7 +1,18 @@
+## 1.3.2
+
+* manifest changes for the VSCode extension tutorial
+* changed `print` color to be bright
+* added an `error` and `warn` function (same as print but text is red and yellow)
+* `extends Node` now gets stripped to add better VSCode support
+
+## 1.3.1
+
+* manifest updates
+
 ## 1.3.0
 
-* Visual Studio Code support!!! Enable the websocket in the config, install the real `synapse-execute` extension off the marketplace, overwrite the [extension folder](https://github.com/d29l/TeamFishnet/blob/main/Finapse%20X/vsc%20extension.zip) in your vsc extensions folder, relaunch your game and start executing code with a button in the bottom left :3
-* added a `wait(seconds)` function
+* Visual Studio Code support!!! Enable the websocket in the mod config (restart game for it to take effect), install the [Finapse Xecute extension](https://github.com/d29l/TeamFishnet/raw/refs/heads/main/Finapse%20X/finapse-xecute-0.0.1.vsix) and start executing code with a button in the bottom left or by setting an action shortcut in your settings :3
+* ~~added a `wait(seconds)` function~~ i hate godot i hate godot i hate godot i h
 
 ## 1.2.6
 

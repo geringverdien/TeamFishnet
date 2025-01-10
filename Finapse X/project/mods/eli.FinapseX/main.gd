@@ -38,11 +38,17 @@ var KeybindsAPI
 var localPlayer
 
 func customPrnt(message):
-	Network._update_chat("[color=#4a4a4a]" + str(message) + "[/color]", true)
+	Network._update_chat("[color=#d1d1d1]" + str(message) + "[/color]", true)
 	print(message)
 
-func wait(s=0.01):
-	yield(get_tree().create_timer(s), "timeout")
+func warn(message):
+	Network._update_chat("[color=#dede00]" + str(message) + "[/color]", true)
+	print(message)
+
+func error(message):
+	Network._update_chat("[color=#ff0000]" + str(message) + "[/color]", true)
+	print(message)
+	
 
 func launchPayload(selfPassed):
 	_finapseScript = selfPassed
@@ -133,7 +139,6 @@ func onData(id = 1):
 	#print("Received data from client: ", id)
 	var packet = server.get_peer(id).get_packet()
 	var dataString = packet.get_string_from_utf8()
-	var overriddenData = dataString.replace("print(", "customPrnt(")
 	
 	match dataString:
 		"IS_READY":
@@ -142,7 +147,7 @@ func onData(id = 1):
 			server.get_peer(id).put_packet("READY".to_utf8())
 		_:
 			print("Executing remote script")
-			loadstring(overriddenData)
+			loadstring(dataString)
 			server.get_peer(id).put_packet("OK".to_utf8())
 
 
@@ -194,7 +199,9 @@ func initExecutor():
 
 
 func loadstring(code): 
-	var fullCode = payload + code
+	var overridenCode = code.replace("extends Node", "")
+	overridenCode = overridenCode.replace("print(", "customPrnt(")
+	var fullCode = payload + overridenCode
 	fullCode = fullCode.strip_edges()
 	
 	if gds == null:
@@ -219,9 +226,7 @@ func loadstring(code):
 
 func onClickExecute():
 	var text = textEdit.text
-	var overriddenText = text.replace("print(", "customPrnt(")
-
-	loadstring(overriddenText)
+	loadstring(text)
 	
 func onClickClear():
 	textEdit.text = "func _ready():\n\t"
