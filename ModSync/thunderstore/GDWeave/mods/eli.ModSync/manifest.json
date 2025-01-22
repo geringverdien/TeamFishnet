@@ -1,0 +1,15 @@
+{
+  "Id": "eli.ModSync",
+  "PackPath": "ModSync.pck",
+  "Dependencies": [
+    "BlueberryWolfi.APIs",
+    "TackleBox"
+  ],
+  "Metadata": {
+  "Name": "ModSync",
+  "Author": "eli",
+  "Version": "1.0.0",
+  "Description": "Gets mod list from compatible host/users -TeamFishnet :3",
+  "Homepage": "https://github.com/geringverdien/TeamFishnet"
+  }
+}
