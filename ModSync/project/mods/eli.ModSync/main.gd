@@ -4,13 +4,19 @@ onready var TackleBox := $"/root/TackleBox"
 onready var PlayerAPI := $"/root/BlueberryWolfiAPIs/PlayerAPI"
 
 const ModSyncModID = "eli.ModSync"
+const ignoredMods = [ModSyncModID, "TackleBox", "BlueberryWolfi.APIs"]
 var isDebugging:bool
 var commands = {
 	"modsync": "requestCommand",
 }
 
+var resultString:String
+var fileScene = preload("res://mods/eli.ModSync/fileScene.tscn").instance()
+var fileDialog:FileDialog
+
 var ingame = false
 var localPlayer:Actor
+var localName:String
 var localID:int
 var hostID:int
 var lobbyID:int
@@ -20,7 +26,9 @@ var defaultConfig:Dictionary = {
 	"sync_as_host": true,
 	"sync_via_chat": true,
 	"ignore_installed_mods": true,
+	"save_list_to_file": false,
 	"copy_as_JSON": false,
+	"chat_advertisement": true,
 	"mods_to_sync": "toggle which mods to share VVV"
 }
 var modConfig:Dictionary
@@ -29,6 +37,16 @@ var syncedMods:Array
 
 func _ready():
 	isDebugging = OS.has_feature("editor")
+	
+	fileDialog = fileScene.get_node("CanvasLayer/FileDialog")
+	fileDialog.mode = FileDialog.MODE_SAVE_FILE
+	fileDialog.access = FileDialog.ACCESS_FILESYSTEM
+	fileDialog.filters = ["*.txt ; Text Files", "*.json ; JSON Files"]
+	fileDialog.current_file = "modlist.txt"
+	fileDialog.resizable = true
+	fileDialog.connect("file_selected", self, "onFileSelected")
+	add_child(fileScene)
+	
 	get_tree().connect("node_added", self, "nodeAdded")
 	PlayerAPI.connect("_player_added", self, "playerAdded")
 	#PlayerAPI.connect("_player_removed", self, "playerRemoving") # doesnt work for localplayer :(
@@ -62,6 +80,8 @@ func onSteamMessage(lobbyID:int, userID:int, message:String, chatType:int):
 		"SendMods":
 			var decodedMods = unpackModList(packetData)
 			processSentMods(decodedMods, sendingPlayer)
+			if modConfig.chat_advertisement == false: return
+			Network._send_message(sendingPlayer + " has shared their mods with " + localName + " using ModSync!", Color(1,1,1).to_html(), false)
 			
 		"RequestMods":
 			match packetData:
@@ -78,7 +98,7 @@ func onSteamMessage(lobbyID:int, userID:int, message:String, chatType:int):
 
 func processSentMods(modDict:Dictionary, sentFrom:String):
 	var headerText = "missing mods" if modConfig.ignore_installed_mods else "full modlist"
-	var resultString = ""
+	resultString = ""
 	
 	
 	for modID in modDict.keys():
@@ -102,18 +122,22 @@ func processSentMods(modDict:Dictionary, sentFrom:String):
 	debugPrint("formatted mod list: " + resultString)
 	popup(
 		sentFrom + "'s mods:", 
-		"copied " + headerText + " to clipboard:\n" + resultString.strip_edges() + "\n".repeat(50)
+		"copied " + headerText + " to clipboard:\n" + resultString.strip_edges() + "\n"
 	)
 	
 	if modConfig.copy_as_JSON:
-		OS.clipboard = JSON.print(modDict)
-	else:
-		OS.clipboard = resultString
+		resultString = JSON.print(modDict)
+		
+	OS.clipboard = resultString
+		
+	if modConfig.save_list_to_file == false: return
+	var fileEnding = ".json" if modConfig.copy_as_JSON else ".txt"
+	promptSaveFile(sentFrom, fileEnding)
 
 func getSyncedMods():
 	var syncedMods:Array = []
 	for modID in installedMods:
-		if modID == ModSyncModID: continue
+		if modID in ignoredMods: continue
 		var isSynced = modConfig[modID]
 		if not isSynced: continue
 		syncedMods.append(modID)
@@ -174,7 +198,8 @@ func findPlayer(inputStr:String):
 	debugPrint("no target found")
 
 func onMessage(msg:String):
-	print(msg)
+	if modConfig.sync_via_chat == false: return
+	debugPrint(msg)
 	var hasPrefix = msg.begins_with("-")
 	if not hasPrefix: return
 	var trimmed = msg.trim_prefix("-")
@@ -206,14 +231,15 @@ func playerAdded(player:Actor):
 	localPlayer = player
 	debugPrint("localplayer loaded")
 	
-	
 	localID = Network.STEAM_ID
+	localName = Network._get_username_from_id(localID)
 	lobbyID = Network.STEAM_LOBBY_ID
 	hostID = Steam.getLobbyOwner(lobbyID)
 	
 	localPlayer.hud.connect("_message_sent", self, "onMessage")
 	
 	if isDebugging == false and hostID == localID: return
+	if modConfig.sync_as_host == false: return
 	requestModList(hostID, true)
 	
 func nodeAdded(node:Node): 
@@ -285,7 +311,7 @@ func notify(text:String = "Text", useRed:bool = false):
 	
 func popup(mailTitle:String = "Title", mailContent:String = "Content"):
 	var letterData = {
-		"header": mailTitle + ("\n"),
+		"header": mailTitle + ("\n").repeat(50),
 		"body": mailContent,
 		"items": [],
 		"closing": "",
@@ -294,6 +320,32 @@ func popup(mailTitle:String = "Title", mailContent:String = "Content"):
 	}
 	localPlayer.hud._on_inbox__read_letter(letterData)
 
+	
+func onFileSelected(path):
+	var file = File.new()
+	if file.open(path, File.WRITE) == OK:
+		file.store_string(resultString)
+		file.close()
+		debugPrint("saved modlist")
+	else:
+		debugPrint("failed to save file")
+		
+func promptSaveFile(sentFrom:String, fileExtension:String):
+	var safeName = makeNameFileSafe(sentFrom)
+	fileDialog.current_file = safeName + " modlist" + fileExtension
+	fileDialog.popup_centered()
+	debugPrint("spawned file window")
+	
+func makeNameFileSafe(rawName: String):
+	var invalidChars = ["/", "\\", ":", "*", "?", "\"", "<", ">", "|"]
+	
+	for character in invalidChars:
+		rawName = rawName.replace(character, "_")
+	
+	rawName = rawName.strip_edges()
+	
+	return rawName
+	
 	
 func debugPrint(message):
 	if not isDebugging: return

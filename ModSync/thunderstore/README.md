@@ -15,18 +15,21 @@ Use the `-modsync [player name]` command to request a modlist of someone who isn
 * Automatically request modlists from the lobby host
 * Get any user's modlist using the `-modsync [player name]` chat command
 * Individually toggle which mods to share with others and which ones not
+* Save modlists to a file for easier access
+* Advertise your use of ModSync to other players to get more users to share mods with :3
 * Real-time configuration, no game restarts required (see below for more details)
 
 ## Configuration
-![image](https://raw.githubusercontent.com/geringverdien/TeamFishnet/refs/heads/main/ModSync/config%20screenshot.png)
-Your default configuration will look something like this. 
+`Sync as host`: Players joining your lobby will receive your modlist and vice versa
 
-`Sync as host`: All joining players will automatically get your modlist
+`Sync via chat`: Toggles the ability for players to request your modlist via chat command and vice versa
 
-`Sync via chat`: Other players can use the chat command to get your modlist
+`Ignore installed mods`: Ignores any mods which you are already using yourself
 
-`Ignore installed mods`: Dont' show/copy any mods which you are already using yourself
+`Save list to file`: Opens a file prompt to save the modlist locally
 
 `Copy as JSON`: Copies the modlist in a JSON format instead of a newline separated list
 
-Below these settings you will see every mod you have installed. Set their values to Disabled if you don't want a mod to show up for users receiving your modlist.
+`Chat advertisement`: Sends a message to everyone in chat when you receive somebody's modlist
+
+Below these settings you will see every mod you have installed (except for ModSync and its dependencies). Set their values to Disabled if you don't want a mod to show up for users receiving your modlist.
