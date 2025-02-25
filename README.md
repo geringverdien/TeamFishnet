@@ -24,3 +24,5 @@
 
 
 We hope you enjoy what we make, for feedback or questions feel free to reach out :)
+You can also support mod development via [the ko-fi](https://ko-fi.com/quirkycmd)
+
