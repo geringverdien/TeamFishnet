@@ -3,7 +3,7 @@ extends Node
 signal mod_config_updated(mod_id, config)
 
 # When testing in the editor add your mod ID here for it to show up!
-const DEFAULT_MODS := ["TackleBox", "eli.FinapseX"]
+const DEFAULT_MODS := ["TackleBox", "eli.FinapseX", "eli.ModSync"]
 const ModMenu := preload("res://mods/TackleBox/scenes/mod_menu/mod_menu.tscn")
 const ModsButton := preload("res://mods/TackleBox/scenes/mods_button.tscn")
 

@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Themes/main.tres" type="Theme" id=1]
+[ext_resource path="res://mods/eli.ParanoiaFishing/assets/ghost.png" type="Texture" id=2]
+[ext_resource path="res://mods/eli.ParanoiaFishing/hauntingUI.gd" type="Script" id=3]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+layer = 127
+
+[node name="Holder" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="WindowDialog" type="WindowDialog" parent="Holder"]
+visible = true
+anchor_left = 0.408333
+anchor_top = 0.208333
+anchor_right = 0.593229
+anchor_bottom = 0.759259
+popup_exclusive = true
+window_title = "ParanoiaFishing by TeamFishnet"
+resizable = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Tree" type="Tree" parent="Holder/WindowDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+allow_reselect = true
+hide_root = true
+
+[node name="Button" type="Button" parent="Holder"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 10.0
+margin_top = -25.0
+margin_right = 60.0
+margin_bottom = 25.0
+focus_mode = 0
+theme = ExtResource( 1 )
+icon = ExtResource( 2 )
+
+[connection signal="popup_hide" from="Holder/WindowDialog" to="Holder" method="_on_WindowDialog_popup_hide"]
+[connection signal="pressed" from="Holder/Button" to="Holder" method="_on_Button_pressed"]
