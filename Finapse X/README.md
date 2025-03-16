@@ -2,7 +2,7 @@
 
 Realtime GD Script executor for Webfishing - brought to you by Team Fishnet :3
 
-![image](https://raw.githubusercontent.com/d29l/TeamFishnet/refs/heads/main/Finapse%20X/screenshot.png)
+![image](https://raw.githubusercontent.com/d29l/TeamFishnet/refs/heads/main/Finapse%20X/screenshot.png?x=1)
 
 ## About
 
