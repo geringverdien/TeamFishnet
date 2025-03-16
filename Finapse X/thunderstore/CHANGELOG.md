@@ -1,3 +1,18 @@
+## 1.3.5
+
+* made script sharing enabled by default
+* fixed script share gui not containing players or containing duplicate players
+
+## 1.3.4
+
+* partially switched over to Socks player API
+* added a script share menu (top left) and `-sendscript [name]` chat command to share scripts with other Finapse users easily
+
+
+## 1.3.3
+
+* reverted a change that caused executing new scripts to break processing on previously run scripts
+
 ## 1.3.2
 
 * manifest changes for the VSCode extension tutorial

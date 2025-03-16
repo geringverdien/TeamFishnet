@@ -3,13 +3,14 @@
   "PackPath": "FinapseX.pck",
   "Dependencies": [
     "BlueberryWolfi.APIs",
-    "TackleBox"
+    "TackleBox",
+    "Toes.Socks"
   ],
   "Metadata": {
   "Name": "Finapse X",
   "Author": "eli",
-  "Version": "1.3.0",
+  "Version": "1.3.5",
   "Description": "Script Executor for Webfishing -TeamFishnet :3",
-  "Homepage": "https://github.com/d29l/TeamFishnet"
+  "Homepage": "https://github.com/geringverdien/TeamFishnet"
   }
 }
