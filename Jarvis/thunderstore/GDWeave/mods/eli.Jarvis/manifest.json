@@ -1,0 +1,15 @@
+{
+  "Id": "eli.Jarvis",
+  "PackPath": "Jarvis.pck",
+  "Dependencies": [
+    "TackleBox",
+    "Toes.Socks"
+  ],
+  "Metadata": {
+  "Name": "Jarvis",
+  "Author": "eli",
+  "Version": "1.0.0",
+  "Description": "AI assistant for your chat -TeamFishnet :3",
+  "Homepage": "https://github.com/geringverdien/TeamFishnet"
+  }
+}

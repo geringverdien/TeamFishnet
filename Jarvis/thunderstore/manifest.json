@@ -1,0 +1,12 @@
+{
+    "name": "Jarvis",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/geringverdien/TeamFishnet",
+    "description": "Jarvis, take his balls",
+    "dependencies": [
+      "NotNet-GDWeave-2.0.14",
+      "PuppyGirl-TackleBox-0.5.2",
+      "toes-Socks-0.2.1"
+    ]
+  }
+  
