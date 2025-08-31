@@ -61,11 +61,11 @@ anchor_bottom = 0.952563
 custom_fonts/font = SubResource( 9 )
 text = "# Finapse X on top - made by team Fishnet :3
 # Note: scripts extend Node automatically, use \"localPlayer\" to access player
-# \"PlayerAPI\" and \"KeybindsAPI\" to access BlueberryWolfi's libraries.
+# \"Chat\" and \"Players\" to use Socks modding library.
 # Prints get outputted to local chat
 
 func _ready():
-	var name = PlayerAPI.get_player_name(localPlayer)
+	var name = Players.get_username(localPlayer)
 	print(\"Hello \" + name + \"!\")
 	print(\"money: \" + str(PlayerData.money))
 	var oldSpeed = localPlayer.walk_speed
