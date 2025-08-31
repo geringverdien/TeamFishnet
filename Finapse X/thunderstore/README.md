@@ -15,12 +15,12 @@ Lets you run scripts in-game without using the editor or recompiling mods for de
 * customizable keybind to open and close (Default F1)
 * totally original name and ui (rip Synapse)
 * syntax highlighting and codemap (I wish CodeEdit was a 3.5 node)
-* built-in `PlayerAPI`, `KeybindsAPI` libraries and `localPlayer` variable
+* built-in ([Socks](https://github.com/binury/Toes.Socks)) `Players`, `Chat` APIs
+* `localPlayer` reference
 * open and save scripts as `.gd` files
 * button to **delete previously executed scripts** (stop infinite loops!)
 
 ## Requirements
 * [GDWeave](https://github.com/NotNite/GDWeave)
-* [BlueberryWolfi APIs](https://github.com/BlueberryWolf/APIs/tree/main)
 * [TackleBox](https://github.com/puppy-girl/TackleBox)
 * [Socks](https://thunderstore.io/c/webfishing/p/toes/Socks/)

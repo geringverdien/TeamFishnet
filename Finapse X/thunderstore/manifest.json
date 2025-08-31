@@ -5,9 +5,8 @@
     "description": "Script Executor for Webfishing -TeamFishnet :3",
     "dependencies": [
       "NotNet-GDWeave-2.0.14",
-      "BlueberryWolfi-BlueberryWolfiAPIs-1.0.2",
       "PuppyGirl-TackleBox-0.5.2",
-      "toes-Socks-0.2.1"
+      "toes-Socks-0.999.0"
     ]
   }
   
