@@ -7,7 +7,10 @@ const COMMENT_COLOR = Color(0.6, 0.6, 0.6)  # Gray
 const NUMBER_COLOR = Color(0.8, 0.5, 0.2)  # Orange
 
 onready var TackleBox := $"/root/TackleBox"
-onready var Socks = get_node_or_null("/root/ToesSocks/Players")
+onready var Chat = get_node("/root/ToesSocks/Chat")
+onready var Players = get_node("/root/ToesSocks/Players")
+onready var Hotkeys = get_node("/root/ToesSocks/Hotkeys")
+
 var PlayerAPI
 var KeybindsAPI
 var ingame = false
@@ -86,16 +89,19 @@ func _ready():
 	KeybindsAPI = get_node_or_null("/root/BlueberryWolfiAPIs/KeybindsAPI")
 	
 	
-	var toggleOpenKeybind = KeybindsAPI.register_keybind({
-	  "action_name": "toggle_finapse",
-	  "title": "Open/Close Finapse X",
-	  "key": KEY_F1,
-	})
-	
-	KeybindsAPI.connect(toggleOpenKeybind + "_up", self, "onKeybindPressed")
-	Socks.connect("ingame", self, "onIngame")
-	Socks.connect("player_added", self, "playerAdded")
-	Socks.connect("player_removed", self, "playerRemoved")
+	Hotkeys.connect(Hotkeys.add({
+	  "name": "toggle_finapse",
+	  "label": "Open/Close Finapse X",
+	  "key_code": KEY_F1,
+	  "modifiers": [],
+	  "repeat": false,
+	  "only_when_in_game": false,
+	  "skip_if_busy": false
+	}), self, "onKeybindPressed")
+
+	Players.connect("ingame", self, "onIngame")
+	Players.connect("player_added", self, "playerAdded")
+	Players.connect("player_removed", self, "playerRemoved")
 	
 	setupSyntaxHighlighting(textEdit)
 	execute.connect("pressed", self, "onClickExecute")
@@ -154,7 +160,7 @@ func onSteamMessage(senderLobbyID:int, userID:int, message:String, chatType:int)
 			print("registration incoming")
 			if str(userID) in finapseUsers.keys() and finapseUsers[str(userID)] != null: return
 			print("received registatrion by " + sendingPlayer)
-			var userActor = Socks.get_player(str(userID))
+			var userActor = Players.get_player(str(userID))
 			finapseUsers[str(userID)] = userActor if userActor else false
 			registerPlayer(userActor)
 		"SendScript":
@@ -207,13 +213,7 @@ func onLetterDeny():
 
 
 func findPlayer(inputStr:String):
-	if not inputStr: return
-		
-	for plr in PlayerAPI.players:
-		if not is_instance_valid(plr): continue
-		var plrName = Network._get_username_from_id(plr.owner_id)
-		if inputStr.to_lower() in plrName.to_lower():
-			return plr
+	return Players.find(inputStr)
 			
 func onMessage(msg:String):
 	if not config.script_sharing: return
@@ -316,12 +316,12 @@ func configUpdated(modID:String, updatedConfig:Dictionary):
 	if modID != "eli.FinapseX": return
 #	print(config.script_sharing, updatedConfig.script_sharing)
 #	if ingame and config.script_sharing == false and updatedConfig.script_sharing == true:
-#		for playerID in Socks.get_players_dict().keys():
+#		for playerID in Players.get_players_dict().keys():
 #			#if playerID == localID: continue
 #			print("sent registration to current member " + str(playerID))
 #			sendRegistration(playerID, true)
 #	if ingame and config.script_sharing == true and updatedConfig.script_sharing == false:
-#		for playerID in Socks.get_players_dict().keys():
+#		for playerID in Players.get_players_dict().keys():
 #			#if playerID == localID: continue
 #			print("sent deregistration to current member " + str(playerID))
 #			sendDeregistration(playerID)
@@ -331,8 +331,9 @@ func configUpdated(modID:String, updatedConfig:Dictionary):
 func initWebsocket():
 	print("ws init")
 	server = WebSocketServer.new()
-	server.connect("client_disconnected", self, "clientDisconnected")
-	server.connect("client_connected", self, "clientConnected")
+	server.connect("connection_closed", self, "clientDisconnected")
+	server.connect("connection_error", self, "clientDisconnected")
+	server.connect("connection_established", self, "clientConnected")
 	server.connect("data_received", self, "onData")
 	
 	var err = server.listen(24892)
@@ -369,7 +370,6 @@ func onData(id = 1):
 		"ATTACH":
 			server.get_peer(id).put_packet("READY".to_utf8())
 		_:
-			if not "func" in dataString: return
 			print("Executing remote script")
 			loadstring(dataString)
 			server.get_peer(id).put_packet("OK".to_utf8())
@@ -407,13 +407,13 @@ func enableInputEvents():
 
 func onIngame():
 	ingame = true
-	localPlayer = PlayerAPI.local_player
+	localPlayer = Players.local_player
 	localID = Network.STEAM_ID
 	lobbyID = Network.STEAM_LOBBY_ID
 	localPlayer.hud.connect("_message_sent", self, "onMessage")
 	initExecutor()
 	yield(get_tree().create_timer(5), "timeout")
-	for playerID in Socks.get_players_dict().keys():
+	for playerID in Players.get_players_dict().keys():
 		#if playerID == localID: continue
 		print("sent registration to current member " + str(playerID))
 		sendRegistration(playerID)
@@ -482,7 +482,6 @@ func onClickClear():
 func onClickClearCache():
 	for child in get_children():
 		if child is CanvasLayer: continue
-		child.set_process(false)
 		child.queue_free()
 
 
@@ -495,8 +494,7 @@ func setupSyntaxHighlighting(text_edit):
 		"export", "setget", "breakpoint", "preload", "yield", "assert",
 		"remote", "master", "puppet", "remotesync", "mastersync", "puppetsync",
 		"PI", "TAU", "INF", "NAN", 
-		"in", "not", "and", "or",
-		"PlayerAPI", "KeybindAPI", "localPlayer"
+		"in", "not", "and", "or"
 	]
 
 	for keyword in keywords:
