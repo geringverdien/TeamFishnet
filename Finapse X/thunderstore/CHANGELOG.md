@@ -1,3 +1,7 @@
+## 1.4.0
+
+* fully switched to Socks API usage, PlayerAPI and KeybindsAPI variables left untouched to use BlueberryWolfiAPIs for legacy script support
+
 ## 1.3.5
 
 * made script sharing enabled by default
